@@ -9,10 +9,10 @@ const Login = () => {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Login attempt:', form);
-    };
-
+    e.preventDefault();
+    console.log('Login attempt:', form);
+    window.location.href = '/upload';
+};
     return (
 
         <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-[linear-gradient(135deg,_#07111f_0%,_#101b2d_35%,_#0d1f41_100%)] p-6 font-[Inter,Arial,sans-serif] text-slate-100">
@@ -74,7 +74,7 @@ const Login = () => {
                             />
                         </div>
 
-                        <button type="submit" className="mt-2 rounded-xl border-0 bg-[linear-gradient(135deg,_#60a5fa,_#8b5cf6,_#22c55e)] px-4 py-4 text-base font-bold text-white shadow-[0_18px_30px_rgba(96,165,250,0.35)] transition-transform duration-200 hover:scale-[1.01]">
+                        <button type="submit" href="/Asign" className="mt-2 rounded-xl border-0 bg-[linear-gradient(135deg,_#60a5fa,_#8b5cf6,_#22c55e)] px-4 py-4 text-base font-bold text-white shadow-[0_18px_30px_rgba(96,165,250,0.35)] transition-transform duration-200 hover:scale-[1.01]">
                             Sign In
                         </button>
                     </form>
