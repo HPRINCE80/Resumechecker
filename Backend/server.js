@@ -2,6 +2,7 @@ const path = require("path");
 require("dotenv").config({
   path: path.resolve(__dirname, "src",".env"),
 });
+// const {resume, selfDescription , jobDescription} = require("./src/services/")
 
 const invokeGeminiAi = require("./src/services/ai.services");
 const app = require("./src/app");
