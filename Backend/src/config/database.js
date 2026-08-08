@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const path = require("path");
 
-require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 async function connectToDB() {
   const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/airesume";
