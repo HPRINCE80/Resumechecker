@@ -1,18 +1,35 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
+    const navigate = useNavigate();
+    const { handleLogin } = useAuth();
     const [form, setForm] = useState({ email: '', password: '' });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
+        setError('');
     };
 
-    const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Login attempt:', form);
-    window.location.href = '/upload';
-};
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            await handleLogin(form);
+            navigate('/upload');
+        } catch (err) {
+            setError(err?.message || 'Login failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
 
         <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-[linear-gradient(135deg,_#07111f_0%,_#101b2d_35%,_#0d1f41_100%)] p-6 font-[Inter,Arial,sans-serif] text-slate-100">
@@ -45,6 +62,12 @@ const Login = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="flex flex-col gap-[22px]">
+                        {error && (
+                            <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                                {error}
+                            </div>
+                        )}
+
                         <div className="flex flex-col gap-2.5">
                             <label htmlFor="email" className="text-sm font-semibold text-slate-200">Email</label>
                             <input
@@ -74,8 +97,8 @@ const Login = () => {
                             />
                         </div>
 
-                        <button type="submit" href="/Asign" className="mt-2 rounded-xl border-0 bg-[linear-gradient(135deg,_#60a5fa,_#8b5cf6,_#22c55e)] px-4 py-4 text-base font-bold text-white shadow-[0_18px_30px_rgba(96,165,250,0.35)] transition-transform duration-200 hover:scale-[1.01]">
-                            Sign In
+                        <button type="submit" disabled={loading} className="mt-2 rounded-xl border-0 bg-[linear-gradient(135deg,_#60a5fa,_#8b5cf6,_#22c55e)] px-4 py-4 text-base font-bold text-white shadow-[0_18px_30px_rgba(96,165,250,0.35)] transition-transform duration-200 hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed">
+                            {loading ? 'Signing In...' : 'Sign In'}
                         </button>
                     </form>
 

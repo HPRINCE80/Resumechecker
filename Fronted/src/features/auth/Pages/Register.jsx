@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+  const { handleRegister } = useAuth();
+
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -10,6 +15,7 @@ const RegisterPage = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,13 +29,14 @@ const RegisterPage = () => {
       ...prev,
       [name]: "",
     }));
+    setServerError("");
   };
 
   const validateForm = () => {
     const nextErrors = {};
 
-    if (!formData.fullName.trim()) {
-      nextErrors.fullName = "Full name is required.";
+    if (!formData.username.trim()) {
+      nextErrors.username = "Username is required.";
     }
 
     if (!formData.email.trim()) {
@@ -53,7 +60,7 @@ const RegisterPage = () => {
     return nextErrors;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const nextErrors = validateForm();
@@ -63,13 +70,20 @@ const RegisterPage = () => {
     }
 
     setIsSubmitting(true);
+    setServerError("");
 
-    console.log("Register form submitted:", formData);
-
-    setTimeout(() => {
+    try {
+      await handleRegister({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+      navigate('/upload');
+    } catch (error) {
+      setServerError(error?.message || 'Registration failed');
+    } finally {
       setIsSubmitting(false);
-      alert("Registration successful!");
-    }, 800);
+    }
   };
 
   return (
@@ -85,24 +99,30 @@ const RegisterPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+          {serverError && (
+            <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-600">
+              {serverError}
+            </div>
+          )}
+
           <div className="flex flex-col gap-2">
-            <label htmlFor="fullName" className="text-sm font-semibold text-slate-700">
-              Full name
+            <label htmlFor="username" className="text-sm font-semibold text-slate-700">
+              Username
             </label>
             <input
-              id="fullName"
-              name="fullName"
+              id="username"
+              name="username"
               type="text"
-              value={formData.fullName}
+              value={formData.username}
               onChange={handleChange}
               placeholder="John Doe"
               className={`w-full box-border rounded-xl border px-4 py-3 text-sm outline-none transition duration-200 placeholder:text-slate-400 shadow-sm ${
-                errors.fullName
+                errors.username
                   ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-100"
                   : "border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               }`}
             />
-            {errors.fullName && <span className="mt-0.5 text-xs text-red-500">{errors.fullName}</span>}
+            {errors.username && <span className="mt-0.5 text-xs text-red-500">{errors.username}</span>}
           </div>
 
           <div className="flex flex-col gap-2">

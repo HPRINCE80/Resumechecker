@@ -2,10 +2,10 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Login from './features/auth/Pages/Login';
 import Register from './features/auth/Pages/Register';
-import Home from "./features/auth/Pages/Home"
+import Home from './features/auth/Pages/Home';
 import InterviewHome from './features/interview/Pages/Home';
 import InterviewPage from './features/interview/Pages/interview';
-import Protected from './features/auth/Protected/Protected'; // apna sahi path daalo
+import Protected from './features/auth/Protected/Protected';
 
 export const router = createBrowserRouter([
   {
@@ -22,10 +22,14 @@ export const router = createBrowserRouter([
   },
   {
     path: '/upload',
-    element: <InterviewHome />,
+    element: (
+      <Protected>
+        <InterviewHome />
+      </Protected>
+    ),
   },
   {
-    path: '/interview/:interviewId',
+    path: '/interview/:id',
     element: (
       <Protected>
         <InterviewPage />
