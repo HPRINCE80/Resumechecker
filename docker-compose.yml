@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: airesume-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: airesume-backend
+    restart: unless-stopped
+    env_file:
+      - ./Backend/src/.env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/airesume
+      PORT: "3000"
+      NODE_ENV: development
+      JWT_SECRET: dev-secret-key
+      JWT_EXPIRES_IN: 1d
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./Fronted
+    container_name: airesume-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:

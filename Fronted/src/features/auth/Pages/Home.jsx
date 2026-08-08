@@ -507,7 +507,7 @@ export default function Home() {
               Answer out loud, see exactly how you did, and go again before the real one.
             </p>
             <div className="hero-actions">
-              <button className="btn btn-primary" onClick={() => navigate('/signup')}>
+              <button className="btn btn-primary" onClick={() => navigate('/login')}>
                 Start practicing — it's free
               </button>
               <button className="btn btn-ghost" onClick={() => navigate('/learn')}>
