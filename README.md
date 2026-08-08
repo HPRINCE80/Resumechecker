@@ -72,7 +72,7 @@ npm install
 Create a `.env` file inside `Backend` with values similar to:
 
 ```env
-MONGO_URI=mongodb://127.0.0.1:27017/airesume
+MONGO_URI=mongodb://127.0.0.1:27017/project
 GOOGLE_API_KEY=your_google_api_key_here
 PORT=3000
 ```
