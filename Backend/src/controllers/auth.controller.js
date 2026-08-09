@@ -5,16 +5,14 @@ const { OAuth2Client } = require('google-auth-library');   // ✅ yeh add karo
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); 
 
-function generateToken(userId) {
-    if (!process.env.JWT_SECRET) {
-        throw new Error('JWT_SECRET is missing in environment variables');
-    }
-
-    return jwt.sign(
-        { id: userId },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
-    );
+function setAuthCookie(res, token) {
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 24 * 60 * 60 * 1000,
+    });
 }
 
 function setAuthCookie(res, token) {
@@ -116,14 +114,21 @@ async function loginuser(req, res) {
 
 async function logoutUserController(req, res) {
     try {
-        res.clearCookie('token', { path: '/', httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' });
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/",
+        });
 
         res.status(200).json({
-            message: "User logged out successfully"
+            message: "User logged out successfully",
         });
     } catch (err) {
-        console.error('Logout error:', err);
-        res.status(500).json({ message: "Something went wrong" });
+        console.error("Logout error:", err);
+        res.status(500).json({
+            message: "Something went wrong",
+        });
     }
 }
 
