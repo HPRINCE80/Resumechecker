@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://aapka-deployed-url.com/sitemap.xml

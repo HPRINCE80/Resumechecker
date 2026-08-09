@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://resumechecker-1-vsad.onrender.com/sitemap.xml
