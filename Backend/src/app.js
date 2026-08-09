@@ -6,7 +6,7 @@ const app = express();
 
 // CORS setup — routes se pehle hona chahiye
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://resumechecker-1-vsad.onrender.com',
   credentials: true
 }));
 
