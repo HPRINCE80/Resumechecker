@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const usermodel = require('../models/user.model');
+const { OAuth2Client } = require('google-auth-library');   // ✅ yeh add karo
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); 
 
 function generateToken(userId) {
     if (!process.env.JWT_SECRET) {
