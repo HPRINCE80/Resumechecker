@@ -6,6 +6,7 @@ import Home from './features/auth/Pages/Home';
 import InterviewHome from './features/interview/Pages/Home';
 import InterviewPage from './features/interview/Pages/interview';
 import Protected from './features/auth/Protected/Protected';
+import HowWork from "./features/auth/Pages/learn";
 
 export const router = createBrowserRouter([
   {
@@ -35,5 +36,8 @@ export const router = createBrowserRouter([
         <InterviewPage />
       </Protected>
     ),
-  },
+  },{
+    path:"/learn",
+    element: <HowWork/>
+  }
 ]);

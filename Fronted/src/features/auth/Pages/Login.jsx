@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { handleLogin } = useAuth();
+    const { handleLogin, handleGoogleLogin } = useAuth();
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -30,8 +31,20 @@ const Login = () => {
         }
     };
 
-    return (
+    const onGoogleSuccess = async (credentialResponse) => {
+        setError('');
+        setLoading(true);
+        try {
+            await handleGoogleLogin(credentialResponse.credential);
+            navigate('/upload');
+        } catch (err) {
+            setError('Google login failed');
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    return (
         <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-[linear-gradient(135deg,_#07111f_0%,_#101b2d_35%,_#0d1f41_100%)] p-6 font-[Inter,Arial,sans-serif] text-slate-100">
             <div className="absolute -left-20 -top-28 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_rgba(109,164,255,0.38),_transparent_60%)] blur-[8px]" />
             <div className="absolute -bottom-36 -right-24 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,_rgba(52,211,153,0.25),_transparent_60%)] blur-[8px]" />
@@ -108,13 +121,18 @@ const Login = () => {
                         <span className="flex-1 border-t border-slate-500/30" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                        <button type="button" className="rounded-xl border border-slate-400/20 bg-slate-900/70 px-3.5 py-3 font-semibold text-slate-200 transition-colors duration-200 hover:bg-slate-800">Google</button>
+                    <div className="flex flex-col gap-3">
+                        <div className="flex justify-center">
+                            <GoogleLogin
+                                onSuccess={onGoogleSuccess}
+                                onError={() => setError('Google login failed')}
+                            />
+                        </div>
                         <button type="button" className="rounded-xl border border-slate-400/20 bg-slate-900/70 px-3.5 py-3 font-semibold text-slate-200 transition-colors duration-200 hover:bg-slate-800">GitHub</button>
                     </div>
 
                     <p className="mt-5 text-center text-[0.96rem] text-slate-300">
-                        Don’t have an account? <a href="/Register" className="font-semibold text-sky-300 no-underline">Create one</a>
+                        Don't have an account? <a href="/Register" className="font-semibold text-sky-300 no-underline">Create one</a>
                     </p>
                 </div>
             </div>

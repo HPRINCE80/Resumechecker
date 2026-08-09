@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth.context";
-import { login, register, logout, getMe } from "../Services/auth.api";
+import { login, register, logout, getMe, googleAuth } from "../Services/auth.api";
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -29,6 +29,20 @@ export const useAuth = () => {
         setLoading(true);
         try {
             const data = await register({ username, email, password });
+            setUser(data.user || null);
+            return data;
+        } catch (err) {
+            setUser(null);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = async (idToken) => {
+        setLoading(true);
+        try {
+            const data = await googleAuth(idToken);
             setUser(data.user || null);
             return data;
         } catch (err) {
@@ -69,5 +83,5 @@ export const useAuth = () => {
         getAndSetUser();
     }, []);
 
-    return { user, loading, handleRegister, handleLogin, handleLogout };
+    return { user, loading, handleRegister, handleLogin, handleLogout, handleGoogleLogin };
 };

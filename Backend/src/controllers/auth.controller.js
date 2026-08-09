@@ -145,5 +145,49 @@ async function getMeController(req, res) {
         res.status(500).json({ message: "Something went wrong" });
     }
 }
+async function googleAuthController(req, res) {
+    try {
+        const { idToken } = req.body;
 
-module.exports = { registerUser, loginuser, logoutUserController, getMeController };
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        const { email, name, sub: googleId } = payload;
+
+        let user = await usermodel.findOne({ email });
+
+        if (!user) {
+            user = new usermodel({
+                username: name,
+                email,
+                googleId,
+            });
+            await user.save();
+        }
+
+        const token = generateToken(user._id);
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+        });
+
+        res.status(200).json({
+            message: "Google login successful",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Google authentication failed" });
+    }
+}
+module.exports = { registerUser, loginuser, logoutUserController, getMeController ,googleAuthController};

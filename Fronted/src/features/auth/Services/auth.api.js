@@ -34,6 +34,15 @@ export async function login({ email, password }) {
     }
 }
 
+export async function googleAuth(idToken) {
+    try {
+        const response = await api.post("/api/auth/google", { idToken });
+        return response.data;
+    } catch (err) {
+        throw getApiError(err);
+    }
+}
+
 export async function logout() {
     try {
         const response = await api.get("/api/auth/logout");

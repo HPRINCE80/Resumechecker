@@ -3,8 +3,6 @@ const { generateInterviewReport, generateResumePdf } = require("../services/ai.s
 const interviewReportModel = require("../models/interviewreport.modules")
 
 
-
-
 /**
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
@@ -13,10 +11,15 @@ async function generateInterViewReportController(req, res) {
         const { selfDescription, jobDescription } = req.body;
         const resumeFile = req.file;
 
+        // ✅ Validation - jobDescription required hai controller level pe bhi
+        if (!jobDescription || !jobDescription.trim()) {
+            return res.status(400).json({
+                message: "Job description is required."
+            });
+        }
+
         let resumeText = '';
 
-
-        // ✅ naya
         if (resumeFile && resumeFile.buffer) {
             const parser = new PDFParse({ data: resumeFile.buffer });
             const result = await parser.getText();
@@ -26,7 +29,7 @@ async function generateInterViewReportController(req, res) {
         const aiPayload = {
             resume: resumeText || selfDescription || '',
             selfDescription: selfDescription || '',
-            jobDescription: jobDescription || ''
+            jobDescription: jobDescription
         };
 
         const interViewReportByAi = await generateInterviewReport(aiPayload);
@@ -35,7 +38,7 @@ async function generateInterViewReportController(req, res) {
             user: req.user.id,
             resume: resumeText,
             selfDescription: selfDescription || '',
-            jobDescription: jobDescription || '',
+            jobDescription: jobDescription,
             ...interViewReportByAi
         });
 

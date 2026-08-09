@@ -608,7 +608,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="footer">
-        <p>&copy; 2024 Resume Interview. All rights reserved.</p>
+        <p>&copy; 2026 Resume Interview. All rights reserved.</p>
         <div className="footer-links">
           <a href="#privacy">Privacy</a>
           <a href="#terms">Terms</a>
