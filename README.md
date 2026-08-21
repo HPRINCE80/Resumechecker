@@ -49,6 +49,20 @@ airesume-interview/
 └── .gitignore
 ```
 
+## Screenshots
+
+### Login Page
+![Login Page](./screenshots/login.png)
+
+### Register Page
+![Register Page](./screenshots/register.png)
+
+### Resume Upload / Interview Setup
+![Interview Setup](./screenshots/interview-setup.png)
+
+### AI Interview Report
+![Interview Report](./screenshots/interview-report.png)
+
 ## Prerequisites
 
 Before running the app with Docker, make sure you have:
