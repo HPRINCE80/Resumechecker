@@ -69,7 +69,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 
     try {
         const response = await ai.models.generateContent({
-            model:  "gemini-2.5-flash",
+            model:  "gemini-3.6-flash",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -92,7 +92,7 @@ async function invokeGeminiAi() {
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-3.6-flash',
             contents: 'Hello Gemini! Explain what interview is.'
         });
 
