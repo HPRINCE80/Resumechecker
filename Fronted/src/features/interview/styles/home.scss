@@ -30,12 +30,13 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     gap: 2rem;
 }
 
-// ── Page Header ──────────────────────────────────────────────────────────────
+// ── Page Header Row (Home / Logout) ───────────────────────────────────────────
 .page-header-row {
     width: 100%;
     max-width: 900px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .home-return-btn {
@@ -122,6 +123,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 
 .panel {
     flex: 1;
+    min-width: 0; // prevents textareas/content from overflowing flex items
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -150,6 +152,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     &__textarea {
         flex: 1;
         width: 100%;
+        box-sizing: border-box;
         background-color: $bg-input;
         border: 1px solid $border-color;
         border-radius: 0.5rem;
@@ -385,7 +388,6 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
-
 // ── Page Footer ───────────────────────────────────────────────────────────────
 .page-footer {
     display: flex;
@@ -403,9 +405,85 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
-.page-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+    .home-page {
+        padding: 2rem 1rem;
+        gap: 1.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .page-header p {
+        font-size: 0.875rem;
+        padding: 0 0.5rem;
+    }
+
+    .interview-card__body {
+        flex-direction: column;
+        min-height: unset;
+    }
+
+    .panel-divider {
+        width: 100%;
+        height: 1px;
+    }
+
+    .panel {
+        padding: 1.25rem;
+    }
+
+    .panel__textarea {
+        min-height: 160px;
+    }
+
+    .panel--left .char-counter {
+        bottom: 1.75rem;
+        right: 1.5rem;
+    }
+
+    .interview-card__footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        text-align: center;
+
+        .generate-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    .recent-reports .reports-list {
+        flex-direction: column;
+
+        .report-item {
+            flex: unset;
+            width: 100%;
+        }
+    }
+
+    .page-footer {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-return-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.35rem;
+    }
+
+    .badge {
+        font-size: 0.6rem;
+    }
 }
