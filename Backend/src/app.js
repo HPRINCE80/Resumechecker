@@ -19,5 +19,6 @@ const interviewRouter = require('./routes/interview.routes');
 
 app.use('/api/auth', authRouter);
 app.use('/api/interview', interviewRouter);
+app.use('/api/resumes', require('./routes/resume.routes'));
 
 module.exports = app;

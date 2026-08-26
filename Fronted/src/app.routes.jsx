@@ -7,11 +7,18 @@ import InterviewHome from './features/interview/Pages/Home';
 import InterviewPage from './features/interview/Pages/interview';
 import Protected from './features/auth/Protected/Protected';
 import HowWork from "./features/auth/Pages/learn";
+import ResumeBuilder from './features/resume/Pages/ResumeBuilder';
+
+
 
 export const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path:'/resume-builder',
+    element:<ResumeBuilder/>
   },
   {
     path: '/register',
