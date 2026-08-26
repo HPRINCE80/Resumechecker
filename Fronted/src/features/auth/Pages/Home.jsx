@@ -1,71 +1,77 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-const QUESTION = 'Tell me about a time you disagreed with a teammate.';
+const QUESTION = "Tell me about a time you disagreed with a teammate.";
 const ANSWER =
   "In my last sprint, a teammate wanted to skip code review to hit a deadline. I pushed back and proposed a faster review step instead — we shipped on time without cutting corners.";
 const TARGET_SCORE = 82;
 
 const STEPS = [
   {
-    n: '01',
-    title: 'Upload your resume',
-    body: 'Drop in a PDF or Word file. We read the roles, skills, and gaps in seconds — nothing to fill out by hand.',
+    n: "01",
+    title: "Upload your resume",
+    body: "Drop in a PDF or Word file. We read the roles, skills, and gaps in seconds — nothing to fill out by hand.",
   },
   {
-    n: '02',
-    title: 'Get your questions',
+    n: "02",
+    title: "Get your questions",
     body: "We turn your actual experience into the questions a hiring manager would ask you, not a generic bank.",
   },
   {
-    n: '03',
-    title: 'Practice out loud',
-    body: 'Answer by voice or text. Get a transcript, a score, and one thing to fix before you try again.',
+    n: "03",
+    title: "Practice out loud",
+    body: "Answer by voice or text. Get a transcript, a score, and one thing to fix before you try again.",
   },
 ];
 
 const FEATURES = [
   {
-    title: 'Built from your resume',
-    body: 'Questions come from the roles and projects you actually list — not a template every candidate gets.',
+    title: "Built from your resume",
+    body: "Questions come from the roles and projects you actually list — not a template every candidate gets.",
     icon: (
       <path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z M15 3v4h4 M9 12h6 M9 16h6 M9 8h2" />
     ),
   },
   {
-    title: 'Feedback on delivery',
-    body: 'Clarity, pacing, and structure — scored per answer, not just a pass or fail at the end.',
+    title: "Feedback on delivery",
+    body: "Clarity, pacing, and structure — scored per answer, not just a pass or fail at the end.",
     icon: <path d="M4 19V9 M10 19V5 M16 19v-7 M22 19H2" />,
   },
   {
-    title: 'Transcripts you keep',
-    body: 'Every session is saved word for word, so you can see exactly what changed between attempt one and five.',
+    title: "Transcripts you keep",
+    body: "Every session is saved word for word, so you can see exactly what changed between attempt one and five.",
     icon: <path d="M5 4h11l3 3v13H5V4Z M16 4v3h3 M8 11h6 M8 15h6" />,
   },
   {
-    title: 'Practice on your schedule',
-    body: 'No booking a slot. Run a session at 7am before the real thing, or twice in one evening.',
-    icon: <path d="M12 3v3 M12 18v3 M3 12h3 M18 12h3 M6 6l2 2 M16 16l2 2 M18 6l-2 2 M8 16l-2 2 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />,
+    title: "Practice on your schedule",
+    body: "No booking a slot. Run a session at 7am before the real thing, or twice in one evening.",
+    icon: (
+      <path d="M12 3v3 M12 18v3 M3 12h3 M18 12h3 M6 6l2 2 M16 16l2 2 M18 6l-2 2 M8 16l-2 2 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />
+    ),
   },
 ];
 
 const READOUT = [
-  { value: '10,400+', label: 'Sessions practiced' },
-  { value: '3.1×', label: 'Avg. score improvement by session 5' },
-  { value: '68%', label: 'Say they felt calmer going in' },
-  { value: '24/7', label: 'No slot to book' },
+  { value: "10,400+", label: "Sessions practiced" },
+  { value: "3.1×", label: "Avg. score improvement by session 5" },
+  { value: "68%", label: "Say they felt calmer going in" },
+  { value: "24/7", label: "No slot to book" },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
   const prefersReducedMotion =
-    typeof window !== 'undefined' &&
+    typeof window !== "undefined" &&
     window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ---- Transcript signature element state ----
-  const [typedAnswer, setTypedAnswer] = useState(prefersReducedMotion ? ANSWER : '');
-  const [phase, setPhase] = useState(prefersReducedMotion ? 'scored' : 'typing'); // 'typing' | 'scoring' | 'scored'
+  const [typedAnswer, setTypedAnswer] = useState(
+    prefersReducedMotion ? ANSWER : "",
+  );
+  const [phase, setPhase] = useState(
+    prefersReducedMotion ? "scored" : "typing",
+  ); // 'typing' | 'scoring' | 'scored'
   const [score, setScore] = useState(prefersReducedMotion ? TARGET_SCORE : 0);
   const timeoutRef = useRef(null);
 
@@ -88,7 +94,7 @@ export default function Home() {
       if (charIndex < ANSWER.length) {
         timeoutRef.current = setTimeout(typeNext, 22);
       } else {
-        setPhase('scoring');
+        setPhase("scoring");
         timeoutRef.current = setTimeout(scoreTick, 400);
       }
     };
@@ -99,7 +105,7 @@ export default function Home() {
       if (scoreValue < TARGET_SCORE) {
         timeoutRef.current = setTimeout(scoreTick, 18);
       } else {
-        setPhase('scored');
+        setPhase("scored");
         timeoutRef.current = setTimeout(resetCycle, 3200);
       }
     };
@@ -107,9 +113,9 @@ export default function Home() {
     const resetCycle = () => {
       charIndex = 0;
       scoreValue = 0;
-      setTypedAnswer('');
+      setTypedAnswer("");
       setScore(0);
-      setPhase('typing');
+      setPhase("typing");
       timeoutRef.current = setTimeout(typeNext, 500);
     };
 
@@ -209,6 +215,16 @@ export default function Home() {
           transition:border-color .15s ease, background .15s ease;
         }
         .nav-login:hover{ border-color:var(--brass); background:rgba(224,181,99,0.08); }
+        .nav-create{
+          background:none;
+          border:0;
+          color:var(--brass-light);
+          padding:9px 6px;
+          font-size:14px;
+          cursor:pointer;
+          transition:color .15s ease;
+}
+.nav-create:hover{ color:var(--paper); text-decoration:underline; }
 
         /* ---------- Hero ---------- */
         .hero{
@@ -491,8 +507,13 @@ export default function Home() {
       {/* Nav */}
       <div className="hero">
         <nav className="nav">
-          <span className="logo"><span className="logo-mark" />Resume Interview</span>
-          <button className="nav-login" onClick={() => navigate('/login')}>Log in</button>
+          <span className="logo">
+            <span className="logo-mark" />
+            Resume Interview
+          </span>
+          <button className="nav-login" onClick={() => navigate("/login")}>
+            Log in
+          </button>
         </nav>
 
         {/* Hero */}
@@ -503,23 +524,40 @@ export default function Home() {
               Practice the interview <em>before</em> it happens.
             </h1>
             <p className="hero-sub">
-              Upload your resume. Get interview questions built from your own experience.
-              Answer out loud, see exactly how you did, and go again before the real one.
+              Upload your resume. Get interview questions built from your own
+              experience. Answer out loud, see exactly how you did, and go again
+              before the real one.
             </p>
             <div className="hero-actions">
-              <button className="btn btn-primary" onClick={() => navigate('/login')}>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/login")}
+              >
                 Start practicing — it's free
               </button>
-              <button className="btn btn-ghost" onClick={() => navigate('/learn')}>
+               <button className="btn btn-ghost" onClick={() => navigate('/resume-builder')}>
+                Build a resume instead
+              </button>
+              <button
+                className="btn btn-ghost"
+                onClick={() => navigate("/learn")}
+              >
                 See how it works
               </button>
             </div>
           </div>
 
           {/* Signature transcript element */}
-          <div className="transcript" role="group" aria-label="Example practice session transcript">
+          <div
+            className="transcript"
+            role="group"
+            aria-label="Example practice session transcript"
+          >
             <div className="transcript-head">
-              <span className="eyebrow"><span className="rec-dot" />Session · Live</span>
+              <span className="eyebrow">
+                <span className="rec-dot" />
+                Session · Live
+              </span>
               <span className="mono transcript-time">00:42</span>
             </div>
 
@@ -532,7 +570,9 @@ export default function Home() {
               <span className="transcript-role">You</span>
               <p className="transcript-a">
                 {typedAnswer}
-                {phase === 'typing' && <span className="cursor" aria-hidden="true" />}
+                {phase === "typing" && (
+                  <span className="cursor" aria-hidden="true" />
+                )}
               </p>
             </div>
 
@@ -540,7 +580,10 @@ export default function Home() {
               <span className="transcript-role">Clarity score</span>
               <div className="meter-row">
                 <div className="meter-track">
-                  <div className="meter-fill" style={{ '--meter-width': `${(score / 100) * 100}%` }} />
+                  <div
+                    className="meter-fill"
+                    style={{ "--meter-width": `${(score / 100) * 100}%` }}
+                  />
                 </div>
                 <span className="meter-score mono">{score}</span>
               </div>
@@ -576,7 +619,12 @@ export default function Home() {
           <div className="features-grid">
             {FEATURES.map((f) => (
               <div className="feature-card" key={f.title}>
-                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   {f.icon}
                 </svg>
                 <h3>{f.title}</h3>
@@ -601,7 +649,7 @@ export default function Home() {
       <section className="cta" aria-label="Get started">
         <h2>Your next interview starts on this page.</h2>
         <p>Free to try. No card, no scheduling, no waiting for a slot.</p>
-        <button className="btn btn-primary" onClick={() => navigate('/login')}>
+        <button className="btn btn-primary" onClick={() => navigate("/login")}>
           Start practicing — it's free
         </button>
       </section>
