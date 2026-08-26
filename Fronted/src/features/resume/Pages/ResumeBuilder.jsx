@@ -8,7 +8,7 @@ const emptyProject = { title: '', description: '' };
 
 export default function ResumeBuilder() {
   const navigate = useNavigate();
-  const { loading, generateResume } = useResume();
+  const { loading, error, generateResume } = useResume(); // ✅ error ab destructure kiya
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     fullName: '', email: '', phone: '', location: '', summary: '',
@@ -42,15 +42,22 @@ export default function ResumeBuilder() {
   const removeItem = (field, index) => setForm((f) => ({ ...f, [field]: f[field].filter((_, i) => i !== index) }));
 
   const handleSubmit = async () => {
+    console.log('Generate button clicked, form:', form); // ✅ debug log
+    if (!form.fullName.trim()) {
+      alert('Full name is required'); // ✅ turant visible feedback
+      return;
+    }
     try {
       const payload = {
         ...form,
         skills: form.skills.filter((s) => s.trim()),
         certifications: form.certifications.filter((c) => c.trim()),
       };
+      console.log('Sending payload:', payload); // ✅ debug log
       await generateResume(payload);
-    } catch {
-      // error already handled in hook's `error` state
+      console.log('Resume generated successfully'); // ✅ debug log
+    } catch (err) {
+      console.error('Resume generation failed:', err); // ✅ ab error console mein dikhega
     }
   };
 
@@ -197,6 +204,13 @@ export default function ResumeBuilder() {
               </button>
             ))}
           </div>
+        )}
+
+        {/* ✅ error ab yahan visible hoga */}
+        {error && (
+          <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+            {error}
+          </p>
         )}
 
         <div className="flex justify-between pt-4">
