@@ -18,7 +18,12 @@ export const router = createBrowserRouter([
   },
   {
     path:'/resume-builder',
-    element:<ResumeBuilder/>
+    
+    element:(
+      <Protected>
+    <ResumeBuilder/>
+    </Protected>
+    ),
   },
   {
     path: '/register',

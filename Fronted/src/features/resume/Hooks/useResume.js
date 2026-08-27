@@ -11,7 +11,13 @@ export const useResume = () => {
     setLoading(true);
     setError('');
     try {
+
       const { resume } = await createResume(formData);
+
+      if (!resume || !resume._id) {
+        throw new Error('Resume create nahi ho paaya. Kripya dobara login karke try karein.');
+      }
+
       const pdfBlob = await downloadResumePdf(resume._id);
 
       const url = window.URL.createObjectURL(pdfBlob);
