@@ -1,21 +1,23 @@
-import axios from 'axios'; // ⚠️ agar aapka koi custom axios instance hai (jaisa interview.api.js mein tha), uska path yahan use karein
+import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const api = axios.create({
+  baseURL: 'https://resumechecker-backend-m0ww.onrender.com',
+  withCredentials: true,
+});
 
 export const createResume = async (payload) => {
-  const { data } = await axios.post(`${API_BASE}/resumes`, payload, { withCredentials: true });
+  const { data } = await api.post('/api/resumes', payload);
   return data;
 };
 
 export const downloadResumePdf = async (resumeId) => {
-  const response = await axios.get(`${API_BASE}/resumes/${resumeId}/download`, {
+  const response = await api.get(`/api/resumes/${resumeId}/download`, {
     responseType: 'blob',
-    withCredentials: true,
   });
   return response.data;
 };
 
 export const getMyResumes = async () => {
-  const { data } = await axios.get(`${API_BASE}/resumes`, { withCredentials: true });
+  const { data } = await api.get('/api/resumes');
   return data;
 };
