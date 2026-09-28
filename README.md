@@ -148,6 +148,23 @@ http://localhost:5173
 4. Generate the interview report.
 5. Review the AI interview insights and generated output.
 
+## Screenshots
+
+### Login
+![Login screen](./screenshots/login.png)
+
+### Register
+![Register screen](./screenshots/register.png)
+
+### Interview Setup
+![Interview setup screen](./screenshots/interview-setup.png)
+
+### Interview Report
+![Interview report screen](./screenshots/interview-report.png)
+
+### Home Dashboard
+![Home dashboard screen](./screenshots/home.png)
+
 ## Notes
 
 - The backend uses CORS for the hosted frontend origin and will also work with local development on port 5173.
