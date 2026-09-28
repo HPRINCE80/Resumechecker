@@ -15,15 +15,27 @@ const Home = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && file.size <= 5 * 1024 * 1024) {
       setResumeFileName(file.name);
     } else {
       setResumeFileName("");
+      if (file) {
+        e.target.value = "";
+        window.alert("Please choose a PDF or DOCX file smaller than 5MB.");
+      }
     }
   };
 
   const handleGenerateReport = async () => {
-    const resumeFile = resumeInputRef.current.files[0];
+    const resumeFile = resumeInputRef.current?.files[0];
+    if (!jobDescription.trim()) {
+      window.alert("Please add the target job description first.");
+      return;
+    }
+    if (!resumeFile && !selfDescription.trim()) {
+      window.alert("Upload a resume or add a quick self-description.");
+      return;
+    }
     const data = await generateReport({
       jobDescription,
       selfDescription,
@@ -33,12 +45,13 @@ const Home = () => {
   };
 
   return (
-    <div className="home-page">
-      <div className="page-header-row">
+    <div className="home-page animate-fade-in">
+      {/* Navigation Header Row */}
+      <div className="page-header-row animate-slide-down">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="home-return-btn"
+          className="home-return-btn group"
           aria-label="Return to home"
         >
           <svg
@@ -57,12 +70,13 @@ const Home = () => {
             <path d="M5 9.5V20h14V9.5" />
             <path d="M9 20v-7h6v7" />
           </svg>
-          Home
+          <span>Home</span>
         </button>
+
         <button
           type="button"
           onClick={() => navigate("/resume-builder")}
-          className="home-return-btn"
+          className="home-return-btn group"
           aria-label="Resume Builder"
         >
           <svg
@@ -82,17 +96,13 @@ const Home = () => {
             <line x1="16" y1="13" x2="8" y2="13" />
             <line x1="16" y1="17" x2="8" y2="17" />
           </svg>
-          Resume Builder
+          <span>Resume Builder</span>
         </button>
 
         <button
           type="button"
           onClick={() => navigate("/login")}
-          // onClick={async () => {
-          //   await handleLogout();
-          //   navigate('/login');
-          // }}
-          className="home-return-btn"
+          className="home-return-btn home-return-btn--danger"
           aria-label="Logout"
         >
           <svg
@@ -111,23 +121,26 @@ const Home = () => {
             <polyline points="16 17 21 12 16 7" />
             <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
-          Logout
+          <span>Logout</span>
         </button>
       </div>
 
-      {/* Page Header */}
-      <header className="page-header">
+      {/* Hero Page Header */}
+      <header className="page-header animate-slide-up">
+        <div className="header-badge">
+          <span className="sparkle-icon">✨</span> AI-Driven Interview Preparation
+        </div>
         <h1>
           Create Your Custom <span className="highlight">Interview Plan</span>
         </h1>
         <p>
-          Let our AI analyze the job requirements and your unique profile to
-          build a winning strategy.
+          Let our advanced AI analyze the job requirements and your unique profile to
+          build an unbeatable winning strategy.
         </p>
       </header>
 
-      {/* Main Card */}
-      <div className="interview-card">
+      {/* Main Glassmorphism Card */}
+      <div className="interview-card animate-scale-up">
         <div className="interview-card__body">
           {/* Left Panel - Job Description */}
           <div className="panel panel--left">
@@ -152,14 +165,18 @@ const Home = () => {
               <span className="badge badge--required">Required</span>
             </div>
             <textarea
-              onChange={(e) => {
-                setJobDescription(e.target.value);
-              }}
+              value={jobDescription}
+              id="jobDescription"
+              name="jobDescription"
+              aria-label="Target job description"
+              onChange={(e) => setJobDescription(e.target.value)}
               className="panel__textarea"
               placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
               maxLength={5000}
             />
-            <div className="char-counter">0 / 5000 chars</div>
+            <div className="char-counter" aria-live="polite">
+              {jobDescription.length} / 5000 chars
+            </div>
           </div>
 
           {/* Vertical Divider */}
@@ -213,7 +230,7 @@ const Home = () => {
                 </span>
 
                 {resumeFileName ? (
-                  <p className="dropzone__title">{resumeFileName}</p>
+                  <p className="dropzone__title file-selected">{resumeFileName}</p>
                 ) : (
                   <>
                     <p className="dropzone__title">
@@ -246,14 +263,17 @@ const Home = () => {
                 Quick Self-Description
               </label>
               <textarea
-                onChange={(e) => {
-                  setSelfDescription(e.target.value);
-                }}
+                value={selfDescription}
+                maxLength={1000}
+                onChange={(e) => setSelfDescription(e.target.value)}
                 id="selfDescription"
                 name="selfDescription"
                 className="panel__textarea panel__textarea--short"
                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
               />
+              <div className="char-counter" aria-live="polite">
+                {selfDescription.length} / 1000 chars
+              </div>
             </div>
 
             {/* Info Box */}
@@ -267,22 +287,8 @@ const Home = () => {
                   fill="currentColor"
                 >
                   <circle cx="12" cy="12" r="10" />
-                  <line
-                    x1="12"
-                    y1="8"
-                    x2="12"
-                    y2="12"
-                    stroke="#1a1f27"
-                    strokeWidth="2"
-                  />
-                  <line
-                    x1="12"
-                    y1="16"
-                    x2="12.01"
-                    y2="16"
-                    stroke="#1a1f27"
-                    strokeWidth="2"
-                  />
+                  <line x1="12" y1="8" x2="12" y2="12" stroke="#fff" strokeWidth="2" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" stroke="#fff" strokeWidth="2" />
                 </svg>
               </span>
               <p>
@@ -294,29 +300,45 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Card Footer */}
+        {/* Card Footer with Pulsing CTA */}
         <div className="interview-card__footer">
           <span className="footer-info">
-            AI-Powered Strategy Generation &bull; Approx 30s
+            🚀 AI-Powered Strategy Generation &bull; Approx 30s
           </span>
-          <button onClick={handleGenerateReport} className="generate-btn">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
-            </svg>
-            Generate My Interview Strategy
+          <button
+            type="button"
+            onClick={handleGenerateReport}
+            className={`generate-btn ${loading ? "is-loading" : ""}`}
+            disabled={loading}
+            aria-busy={loading}
+          >
+            {loading ? (
+              <span className="spinner-wrapper">
+                <span className="spinner"></span>
+                Building Your Strategy...
+              </span>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="btn-sparkle-icon"
+                >
+                  <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+                </svg>
+                Generate My Interview Strategy
+              </>
+            )}
           </button>
         </div>
       </div>
 
-      {/* Recent Reports List */}
+      {/* Recent Reports List with Hover Effects */}
       {reports.length > 0 && (
-        <section className="recent-reports">
+        <section className="recent-reports animate-fade-in-up">
           <h2>My Recent Interview Plans</h2>
           <ul className="reports-list">
             {reports.map((report) => (
@@ -325,14 +347,22 @@ const Home = () => {
                 className="report-item"
                 onClick={() => navigate(`/interview/${report._id}`)}
               >
-                <h3>{report.title || "Untitled Position"}</h3>
-                <p className="report-meta">
-                  Generated on {new Date(report.createdAt).toLocaleDateString()}
-                </p>
+                <div className="report-item-content">
+                  <h3>{report.title || "Untitled Position"}</h3>
+                  <p className="report-meta">
+                    Generated on {new Date(report.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
                 <p
-                  className={`match-score ${report.matchScore >= 80 ? "score--high" : report.matchScore >= 60 ? "score--mid" : "score--low"}`}
+                  className={`match-score ${
+                    report.matchScore >= 80
+                      ? "score--high"
+                      : report.matchScore >= 60
+                      ? "score--mid"
+                      : "score--low"
+                  }`}
                 >
-                  Match Score: {report.matchScore}%
+                  Match: {report.matchScore}%
                 </p>
               </li>
             ))}
@@ -342,9 +372,9 @@ const Home = () => {
 
       {/* Page Footer */}
       <footer className="page-footer">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Help Center</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#terms">Terms of Service</a>
+        <a href="#help">Help Center</a>
       </footer>
     </div>
   );

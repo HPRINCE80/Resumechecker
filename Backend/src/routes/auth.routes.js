@@ -17,7 +17,7 @@ authRouter.post('/login', authcontroller.loginuser);
 authRouter.get('/logout', authcontroller.logoutUserController);
 authRouter.post('/google', authcontroller.googleAuthController);
 
-// ✅ path fix: 'get-me' (hyphen ke saath) + controller add kiya
+
 authRouter.get('/get-me', authUserMiddleware.authUser, authcontroller.getMeController);
 
 module.exports = authRouter;
