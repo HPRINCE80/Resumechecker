@@ -97,7 +97,7 @@ docker compose up --build
 This will start the backend and MongoDB containers, and the frontend can be configured to connect to the backend through the browser.
 
 ### 3) Access the app
-
+   Live Demp:https://resumechecker-1-vsad.onrender.com/
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 - MongoDB: mongodb://localhost:27017
