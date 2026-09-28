@@ -1,15 +1,18 @@
 # AI Resume Interview App
 
-A full-stack application for resume-based interview preparation and AI-assisted evaluation. The project includes a Node.js/Express backend for authentication, interview logic, MongoDB storage, and Gemini-powered interview report generation, plus a React + Vite frontend for the user experience.
+A full-stack resume and interview preparation platform that lets users upload a resume or provide a short profile summary, paste a target job description, and generate an AI-assisted interview report. The app is built with a Node.js/Express backend, MongoDB data layer, and a React + Vite frontend.
 
 ## Features
 
 - User registration and login
-- Protected interview routes
-- Resume and job description input flow
-- AI-generated interview analysis using Google Gemini
-- MongoDB-backed data persistence
-- React frontend with route-based navigation
+- JWT + cookie-based authentication
+- Protected interview and resume routes
+- Resume upload or quick profile summary entry
+- Job description-driven mock interview analysis
+- AI-generated interview guidance using Google Gemini
+- Resume PDF generation support
+- MongoDB-backed persistence for users and reports
+- React-based dashboard and routing experience
 
 ## Tech Stack
 
@@ -18,9 +21,10 @@ A full-stack application for resume-based interview preparation and AI-assisted 
 - Express
 - MongoDB + Mongoose
 - JWT authentication
-- Cookie-based auth
+- Cookie-based session handling
 - Google GenAI integration
-- Multer and PDF parsing support
+- Multer for file upload
+- PDF parsing and generation utilities
 
 ### Frontend
 - React 19
@@ -36,76 +40,70 @@ airesume-interview/
 ├── Backend/
 │   ├── src/
 │   ├── data/
-│   ├── .env
+│   ├── Dockerfile
 │   ├── package.json
 │   └── server.js
 ├── Fronted/
 │   ├── src/
 │   ├── public/
+│   ├── Dockerfile
 │   ├── package.json
 │   ├── vite.config.js
 │   └── index.html
+├── docker-compose.yml
 ├── README.md
+├── screenshots/
 └── .gitignore
 ```
 
-## Screenshots
+## Live Demo
 
-### Login Page
-![Login Page](./screenshots/login.png)
-
-### Register Page
-![Register Page](./screenshots/register.png)
-
-### Resume Upload / Interview Setup
-![Interview Setup](./screenshots/interview-setup.png)
-
-### AI Interview Report
-![Interview Report](./screenshots/interview-report.png)
+- Frontend: https://resumechecker-1-vsad.onrender.com/
+- Backend API: served from the same deployment environment
 
 ## Prerequisites
 
-Before running the app with Docker, make sure you have:
+Before starting the app locally, make sure you have:
 
-- Docker installed and running
-- Docker Compose installed
+- Node.js 18+ or later
+- npm
+- Docker and Docker Compose (recommended)
 - A Google API key for Gemini access
 
-## Docker Setup
+## Environment Setup
 
-This project is designed to run with Docker for the easiest local setup.
+The backend expects an environment file at `Backend/src/.env`.
 
-### 1) Create environment file
-
-Create a `.env` file in the `Backend` folder with values like:
+Create it with the following values:
 
 ```env
-MONGO_URI=mongodb://mongo:27017/airesume
-GOOGLE_API_KEY
-=your_google_api_key_here
+MONGO_URI=mongodb://127.0.0.1:27017/airesume
+GOOGLE_API_KEY=your_google_api_key_here
 PORT=3000
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=1d
 ```
 
-### 2) Start the app with Docker Compose
+For Docker Compose, the project already sets `MONGO_URI`, `PORT`, `NODE_ENV`, `JWT_SECRET`, and `JWT_EXPIRES_IN` in `docker-compose.yml`, but the backend still reads the env file from `Backend/src/.env` when present.
 
-From the project root, run:
+## Running with Docker Compose
+
+From the project root:
 
 ```bash
 docker compose up --build
 ```
 
-This will start the backend and MongoDB containers, and the frontend can be configured to connect to the backend through the browser.
+This starts:
 
-### 3) Access the app
-   Live Demp:https://resumechecker-1-vsad.onrender.com/
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 - MongoDB: mongodb://localhost:27017
 
-## Docker Commands
+Useful commands:
 
 ```bash
-# Build images
+# Build the images
 docker compose build
 
 # Start services
@@ -118,28 +116,13 @@ docker compose down
 docker compose up --build --force-recreate
 ```
 
-## Local Setup (Alternative)
-
-If you do not want to use Docker, you can run the services manually.
+## Running Locally Without Docker
 
 ### Backend
 
 ```bash
 cd Backend
 npm install
-```
-
-Create a `.env` file inside `Backend`:
-
-```env
-MONGO_URI=mongodb://127.0.0.1:27017/airesume
-GOOGLE_API_KEY=your_google_api_key_here
-PORT=3000
-```
-
-Then start:
-
-```bash
 npm run dev
 ```
 
@@ -151,29 +134,31 @@ npm install
 npm run dev
 ```
 
-The frontend runs on:
+Then open:
 
 ```text
 http://localhost:5173
 ```
 
-## Running the App
+## Application Flow
 
-1. Start MongoDB or use Docker containers.
-2. Start the backend.
-3. Start the frontend.
-4. Open the frontend URL in the browser.
+1. Register or log in.
+2. Paste a target job description.
+3. Upload a resume or enter a brief self-description.
+4. Generate the interview report.
+5. Review the AI interview insights and generated output.
 
-## Important Notes
+## Notes
 
-- The backend is configured for CORS on `http://localhost:5173`.
-- If `GOOGLE_API_KEY` is not set, the app will fall back to a mock interview report.
-- Authentication uses cookies and JWTs, so the frontend must send credentials for protected routes.
-- Docker is the recommended way to run the project locally for consistent setup.
+- The backend uses CORS for the hosted frontend origin and will also work with local development on port 5173.
+- If `GOOGLE_API_KEY` is missing, the app can still run in a fallback mode depending on the service logic.
+- Authentication uses cookies and JWTs; protected routes require credentials.
+- Docker is the recommended method for a consistent local environment.
 
 ## Common Commands
 
 ### Backend
+
 ```bash
 cd Backend
 npm install
@@ -182,6 +167,7 @@ npm start
 ```
 
 ### Frontend
+
 ```bash
 cd Fronted
 npm install
@@ -191,4 +177,4 @@ npm run build
 
 ## License
 
-This project currently uses the ISC license as defined in the backend package configuration.
+This project is licensed under the ISC license, as defined in the backend package configuration.
